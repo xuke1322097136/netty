@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package com.ctrip.flight.grpc4;
+option java_package = "com.ctrip.flight.grpc4";
+option java_outer_classname = "People4Proto";
+option  java_multiple_files= true;
+
+//第三种情况：向服务器端发送一个PeopleRequest，返回的是一个PeopleResponseList(即多个PeopleResponse)
+service PeopleService{
+    rpc GetRealNameByUsername(MyRequest) returns (MyResponse){}
+
+    rpc GetPeoplesByAge(PeopleRequest) returns (stream PeopleResponse){}
+
+    rpc GetPeoplesWrapperByAges(stream PeopleRequest) returns (PeopleResponseList){}
+
+    rpc BiTalk(stream StreamRequest) returns (stream StreamResponse){}
+}
+
+message MyRequest{
+    string username = 1;
+}
+
+message MyResponse{
+    string realname = 1; // 视频里为什么是2？
+}
+message PeopleRequest{
+    int32 age = 1;
+}
+
+message PeopleResponse{
+    string name = 1;
+    int32 age = 2;
+    string city = 3;
+}
+
+message PeopleResponseList{
+    repeated PeopleResponse peopleResponse = 1;
+}
+
+message StreamRequest{
+    string request_info = 1;
+}
+
+message StreamResponse{
+    string response_info = 1;
+}

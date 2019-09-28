@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>groupId</groupId>
+    <artifactId>netty-learning</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.9.1</version>
+        </dependency>
+
+        <!--If you want to use features like protobuf JsonFormat, add a dependency on the protobuf-java-util package-->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>3.9.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>0.12.0</version>
+        </dependency>
+        <!--加入grpc的依赖，第一个是grpc依赖netty来传输的依赖库；第二个是因为grpc本来就是依赖于protobuf这个IDL的；
+                    第三个依赖是用来生成客户端和服务器端的桩代码的。
+                    grpc具体的github地址为：https://github.com/grpc/grpc-java
+                    grpc的官方地址：https://www.grpc.io/docs/quickstart/java/
+          -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+            <version>1.23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>1.23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>1.23.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!--
+         grpc的消息传输格式/内容是基于protobuf来完成的，protobuf本身提供了protoc这个编译器，用来生成目标语言的代码，
+         而grpc在protobuf的基础之上增加了RpcService这样一个功能，用于首先客户端和服务器之间的远程通信。
+         所以在我们使用grpc来构建的话，grpc针对protobuf又提供了一个自己的插件，通过这个插件，我们可以让它生成
+         除了protobuf的那些message文件之外，还可以生成rpc的service/method相对应的桩代码以及特定的服务端和客户端的
+         基础代码，这些都是由grpc针对protobuf的插件来完成的。
+         grpc主要基于三种传输层的实现：（摘自：https://github.com/grpc/grpc-java）
+              1.Netty-based transport；
+              2.OkHttp-based transport；（主要用于android里面的）
+              3.in-process transport。（进程内的传输，主要用于测试）
+          -->
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+
+                <configuration>
+                    <protocArtifact>com.google.protobuf:protoc:3.9.0:exe:${os.detected.classifier}</protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.23.0:exe:${os.detected.classifier}</pluginArtifact>
+                    <!--指定代码生成到 src 下，我们可以先使用aaa测试一下效果，然后一步一步地试探出正确结果-->
+                    <outputDirectory>${basedir}/src/main/java</outputDirectory>
+                    <!-- 生成文件前是否把目标目录清空!!!这个一定要设置为false，以免误删项目文件!!! -->
+                    <clearOutputDirectory>false</clearOutputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <!--为什么这个extensions要放到plugin的下面来？？了解pom文件的结构！
+        https://blog.csdn.net/magasea/article/details/93871082
+        -->
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.6.2</version>
+            </extension>
+        </extensions>
+
+    </build>
+</project>

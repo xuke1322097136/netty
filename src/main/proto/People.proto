@@ -1,0 +1,25 @@
+syntax = "proto3";
+// grpc使用的是proto3版本的
+//For protobuf-based codegen, you can put your proto files in the src/main/proto and src/test/proto
+//directories along with an appropriate plugin.(摘自https://github.com/com.ctrip.flight.grpc/com.ctrip.flight.grpc-java，
+//意思就是默认情况下我们要将IDL文件放置到src/main/proto目录中)
+package com.ctrip.flight.grpc;
+option java_package = "com.ctrip.flight.grpc";
+option java_outer_classname = "PeopleProto";
+option  java_multiple_files= true; // 这个的意思是生成多个文件，原来我们是将所有的属性和方法都放置在同一个文件中，现在拆开
+
+//    rpc关键字来指定这是一个rpc调用，方法名的第一个字母无论你是大写还是小写，最后生成的代码都会转化成小写的开头
+service PeopleService{
+    rpc GetRealNameByUsername(MyRequest) returns (MyResponse){}
+}
+
+//如何利用grpc插件生成java文件：第一步：右边maven的插件点开点protobuf:compile 在target生成java文件夹（属性）.
+//第二步：同理，点击protobuf:compile-custom在target生成grpc-java文件夹（方法）。当然，同时还会有很多文件在target目录下生成，
+// 我们使用的文件位于target/generated-sources/protobuf下面的两个文件夹(grpc-java和java)
+message MyRequest{
+    string username = 1;
+}
+
+message MyResponse{
+    string realname = 1; // 视频里为什么是2？
+}

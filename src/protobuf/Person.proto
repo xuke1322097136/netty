@@ -1,0 +1,41 @@
+syntax = "proto2";
+package com.ctrip.flight.protobuf2;
+
+option optimize_for = SPEED;
+option java_package = "com.ctrip.flight.protobuf2";
+option java_outer_classname = "MultiDataInfo";
+//这类的MyMessage没必要跟文件名字（Person.proto）一样
+message MyMessage{
+    enum DataType{
+      PersonType = 1;
+      DogType = 2;
+      CatType = 3;
+   }
+
+   required DataType data_type = 1;
+
+//    oneof表示的是有很多个可选字段，但是在某一时刻只会设置一个字段。同时，oneof字段可以节省内存空间。另外，里面的字段是从2开始的，
+//    和data_type是位于同一层次的
+    oneof DataBody{
+          Person person = 2;
+          Dog dog = 3;
+          Cat cat = 4;
+    }
+}
+
+
+message Person{
+    optional string name = 1;
+    optional int32 age = 2;
+    optional string address = 3;
+}
+message Dog{
+    optional string name = 1;
+    optional int32 age = 2;
+}
+
+message Cat{
+    optional string name = 1;
+    optional string city = 2;
+}
+
