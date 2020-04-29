@@ -34,6 +34,7 @@ import io.netty.handler.logging.LoggingHandler;
  *             可以是OP_ACCEPT,OP_READd等事件），调用方在调用它的时候会阻塞，它会一直阻塞到同步分离器上有事件产生为止。
  *             对于Linux系统来说，同步事件分离器指的就是常见的多路复用机制，比如：select、poll、epoll等。
  *             在Java NIO中，同步事件分离器对应的组件就是Selector，对应的阻塞方法就是select()方法。
+ *             所以，它是bossGroup来实现的？？负责监听客户端的连接请求事件？
  *
  *   3. Event Handler（事件处理器）：本身由多个回调方法构成，这些回调方法构成了与应用相关的对于某个事件反馈机制。在NIO种没有与之对应的角色，
  *            但是netty中的XXXHandler就是事件处理器，它相比Java NIO来说，在事件处理器上进行了升级，为开发者提供了大量的回调方法，
@@ -54,12 +55,17 @@ import io.netty.handler.logging.LoggingHandler;
  * Reactor模式所有组件运转的流程：
  *                    首先Initiation Dispatcher会将若干个Concrete Event Handler注册到它上面，由于Concrete Event Handler内存含有Handle信息，
  *                    因此在注册的同时，就会指定某一个事件处理器（Concrete Event Handler）它感兴趣的事件是什么（OP_ACCEPT等），注册完毕之后。
- *                    紧接着Initiation Dispatcher 的事件循环就会启动，当Handle变为ready状态时，即产生了某一个事件Handle的时候，
- *                    Synchronous Event Demultiplexer就会被调用，并通知Initiation Dispatcher。由于Synchronous Event Demultiplexer是同步阻塞的，
- *                    等待着一个或多个事情的发生，接着返回给Initiation Dispatcher所产生的那些事件集合，Initiation Dispatcher会根据事件
- *                    寻找到该事件所关联到的已经注册好的Handlers，遍历Handlers里面的每一个Handler，具体来说是将处于ready状态的Handle作为key，
- *                    找到与之对应的Concrete Event Handler中的回调方法来处理事件。
+ *                    紧接着Initiation Dispatcher 的事件循环就会启动。
+ *                    当Handle变为ready状态时，即产生了某一个事件Handle的时候，Synchronous Event Demultiplexer就会被调用，并通知Initiation Dispatcher。
+ *                    由于Synchronous Event Demultiplexer是同步阻塞的，等待着一个或多个事情的发生，接着返回给Initiation Dispatcher所产生的那些事件集合，
+ *                    Initiation Dispatcher会根据事件寻找到该事件所关联到的已经注册好的Handlers，遍历Handlers里面的每一个Handler，
+ *                    具体来说是将处于ready状态的Handle作为key，找到与之对应的Concrete Event Handler中的回调方法来处理事件。
  *
+ *      有多个输入源，有多个不同的EventHandler（RequestHandler）来处理不同的请求，Initiation Dispatcher用于
+ *      管理EventHander，EventHandler首先要注册到Initiation Dispatcher中，然后Initiation Dispatcher根据输入
+ *      的Event分发给注册的EventHandler；然而Initiation Dispatcher并不监听Event的到来，这个工作交
+ *      给Synchronous Event Demultiplexer来处理。
+ *      可以参考下：http://www.blogjava.net/DLevin/archive/2015/09/02/427045.html
  *   Acceptor：用来完成bossGroup和和workerGroup之间的交接工作。查看netty的源码，从blind()方法点进去就可以看到ServerBootstrap里面的init()方法，
  *             它完成了往ChannelInitializer里面的ChannelPipeline添加一个ServerBootstrapAcceptor（本质上是ChannelInboundHandlerAdapter），由此可见，
  *             ServerBootstrapAcceptor其实也是一个Handler，紧接着是通过ServerBootstrap的channelRead()方法来完成
