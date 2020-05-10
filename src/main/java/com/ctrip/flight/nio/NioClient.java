@@ -17,6 +17,14 @@ import java.util.concurrent.Executors;
  * Description:
  * Date: 2019-07-16
  * Time: 23:04
+ *
+ * Connect：连接完成事件( TCP 连接 )，仅适用于客户端，对应 SelectionKey.OP_CONNECT ；
+ *
+ * Accept：接受新连接事件，仅适用于服务端，对应 SelectionKey.OP_ACCEPT ；
+ *
+ * Read：读事件，适用于两端，对应 SelectionKey.OP_READ ，表示 Buffer 可读；
+ *
+ * Write：写时间，适用于两端，对应 SelectionKey.OP_WRITE ，表示 Buffer 可写。
  */
 public class NioClient {
     public static void main(String[] args) {

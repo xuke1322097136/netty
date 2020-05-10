@@ -18,6 +18,7 @@ import java.util.UUID;
  * Description:
  * Date: 2019-07-16
  * Time: 22:11
+ * https://www.dazhuanlan.com/2020/01/30/5e31fadeaf23a/
  */
 public class NioServer {
     private static Map<String, SocketChannel> clientMap = new HashMap<>();// 客户端之间通信，所以需要保存哪一个客户端发送的消息（key），然后发送了啥(SocketChannel)
