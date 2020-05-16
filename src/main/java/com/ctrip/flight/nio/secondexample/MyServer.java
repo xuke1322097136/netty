@@ -86,6 +86,11 @@ import io.netty.handler.logging.LoggingHandler;
  *     InBound的话，它只会拦截InBound的数据，如果是OutBound，它只会拦截OutBound的数据，一个InBound类型的数据是不会流经OutBoundHandler的，同理，一个
  *     一个OutBound类型的数据是不会流经InBoundHandler的，不过我们也是可以定义一个ChannelHandler既是InBoundHandler又是OutBoundHandler，只需要分别实现
  *     相应的接口就好，但是很多情况下是不会这么做的，最好还是分开处理。
+ *
+ *     执行顺序：服务端启动之后，接着客户端通过8899端口启动并建立好连接，接着服务器端执行channelActive表示服务端已经连接好了，
+ *               接着客户端执行channelActive方法表示客户端也连接好了。接着客户端接着执行channelRead0方法，客户端和服务端开始
+ *               正常通信，客户端向服务端发送数据，服务端通过channelRead0方法接受数据，并给客户端回消息，接着，客户端还是通过
+ *               channelRead0方法接收到数据，以此类推，双方开始正常通信。
  */
 public class MyServer {
     public static void main(String[] args) throws Exception{
@@ -135,7 +140,7 @@ public class MyServer {
              *
              */
             ChannelFuture channelFuture =  serverBootstrap.bind(8899).sync();
-           channelFuture.channel().closeFuture().sync();
+            channelFuture.channel().closeFuture().sync();
 
         }finally {
             bossGroup.shutdownGracefully();

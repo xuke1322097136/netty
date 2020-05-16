@@ -23,6 +23,7 @@ public class MyClientHandler extends SimpleChannelInboundHandler<String> {
     }
 
     /**
+     *      第一次刚建立连接的时候会调用该方法，也就是说，该方法的执行时机要先于channelRead0方法。
      *      客户端和服务器端建立好连接之后，并且channel处于活动状态了，该方法会立刻被调用,表示客户端可以向服务器端发送消息了。
      *      如果没有这个方法，我们是看不到任何输出结果的，因为客户端和服务器端都没发送过消息，因此我们可以通过该回调方法来发送消息
      *      不要在ChannelHandler的这些方法里调用await（）方法，不然会造成是死锁，具体原因在ChannelFuture的源码里有解释。
@@ -40,6 +41,7 @@ public class MyClientHandler extends SimpleChannelInboundHandler<String> {
       */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("client active");
         ctx.writeAndFlush("来自于客户端的问候!");
     }
 

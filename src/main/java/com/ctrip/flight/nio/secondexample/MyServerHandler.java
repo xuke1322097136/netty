@@ -25,4 +25,10 @@ public class MyServerHandler extends SimpleChannelInboundHandler<String> {
         cause.printStackTrace();
         ctx.close();
     }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("server active");
+        ctx.writeAndFlush("server is active now");
+    }
 }
