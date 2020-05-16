@@ -54,10 +54,10 @@ public class ByteBufTest2 {
         CompositeByteBuf compositeByteBuf = Unpooled.compositeBuffer();
 
         ByteBuf heapBuf = Unpooled.buffer(10);
-        ByteBuf dierctBuf = Unpooled.buffer(8);
+        ByteBuf directBuf = Unpooled.buffer(8);
 
         // 通过可变数组添加ByteBuf
-        compositeByteBuf.addComponents(heapBuf, dierctBuf);
+        compositeByteBuf.addComponents(heapBuf, directBuf);
 
         Iterator<ByteBuf> iterator = compositeByteBuf.iterator();
         while (iterator.hasNext()){
