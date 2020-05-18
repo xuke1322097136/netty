@@ -66,6 +66,7 @@ import io.netty.handler.logging.LoggingHandler;
  *      的Event分发给注册的EventHandler；然而Initiation Dispatcher并不监听Event的到来，这个工作交
  *      给Synchronous Event Demultiplexer来处理。
  *      可以参考下：http://www.blogjava.net/DLevin/archive/2015/09/02/427045.html
+ *
  *   Acceptor：用来完成bossGroup和和workerGroup之间的交接工作。查看netty的源码，从blind()方法点进去就可以看到ServerBootstrap里面的init()方法，
  *             它完成了往ChannelInitializer里面的ChannelPipeline添加一个ServerBootstrapAcceptor（本质上是ChannelInboundHandlerAdapter），由此可见，
  *             ServerBootstrapAcceptor其实也是一个Handler，紧接着是通过ServerBootstrap的channelRead()方法来完成

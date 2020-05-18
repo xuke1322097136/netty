@@ -23,7 +23,7 @@ import io.netty.handler.logging.LoggingHandler;
  *                将数据由原本(int、long、String等)的形式转换为字节流（ByteBuf）的操作称作为编码(encode)，将数据由字节转换为它原本的格式
  *                或者是其他格式的操作称之为解码(decode)，编解码统称为codec；
  *    5. 编码(encode)：本质上是一个出站处理器，因此编码一定是一种ChannelOutboundHandler；
- *    6. 解码(decode)：本质上是一个入站处理器，因此编码一定是一种ChannelInboundHandler；
+ *    6. 解码(decode)：本质上是一个入站处理器，因此解码一定是一种ChannelInboundHandler；
  *    7. 在Netty中，编码通常以XXXEncoder形式命名，解码通常以XXXDecoder形式命名。
  */
 public class MyServer {
