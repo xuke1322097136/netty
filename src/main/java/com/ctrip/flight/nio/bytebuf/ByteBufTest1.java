@@ -28,13 +28,13 @@ public class ByteBufTest1 {
             // 里面还有一个maxCapacity（Integer.MAX_VALUE）而ByteBuffer的capacity值是固定大小的。
             System.out.println(byteBuf);
 
-            System.out.println(byteBuf.arrayOffset());
-            System.out.println(byteBuf.readerIndex());
-            System.out.println(byteBuf.writerIndex());
-            System.out.println(byteBuf.capacity());
+            System.out.println("arrayOffset:" + byteBuf.arrayOffset());
+            System.out.println("readerIndex:" + byteBuf.readerIndex());
+            System.out.println("writerIndex:" + byteBuf.writerIndex());
+            System.out.println("capacity:" + byteBuf.capacity());
 
             int length = byteBuf.readableBytes();
-            System.out.println(length);
+            System.out.println("readableBytes:" + length);
 
             for (int i = 0; i < byteBuf.readableBytes(); i++){
                 // 由于中文的原因，中间会打印出乱码出来，因为一个中文是3个字节
