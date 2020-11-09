@@ -34,7 +34,7 @@ public class NewClient {
          *                    | DMA copy              |  DMA copy
          *               hard driver              protocol engine
          *
-         *   真个过程是：首先hard driver 将磁盘数据（文件）拷贝到内核缓存kernel buffer中，接着内核缓存将文件描述符（包含文件起始位置和文件长度）
+         *   整个过程是：首先hard driver 将磁盘数据（文件）拷贝到内核缓存kernel buffer中，接着内核缓存将文件描述符（包含文件起始位置和文件长度）
          *               传送给socket buffer，接着将文件描述符直接发送给协议引擎（protocol engine），然后协议引擎将直接去内核缓存中读取真正的文件数据。
          *               相当于在这我们省去了内核缓存到socket缓存之间数据的完全拷贝，只发送两个指针数据。
          */

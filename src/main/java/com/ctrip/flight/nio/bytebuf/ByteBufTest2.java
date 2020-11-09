@@ -56,8 +56,8 @@ public class ByteBufTest2 {
         ByteBuf heapBuf = Unpooled.buffer(10);
         ByteBuf directBuf = Unpooled.buffer(8);
 
-        // 通过可变数组添加ByteBuf
-        compositeByteBuf.addComponents(heapBuf, directBuf);
+        // 通过可变数组添加ByteBuf,注意第一个参数是：默认为false，这里开启才能自增writeIndex
+        compositeByteBuf.addComponents(true, heapBuf, directBuf);
 
         Iterator<ByteBuf> iterator = compositeByteBuf.iterator();
         while (iterator.hasNext()){
