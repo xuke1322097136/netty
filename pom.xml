@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.apache.thrift</groupId>
             <artifactId>libthrift</artifactId>
-            <version>0.12.0</version>
+            <version>0.14.0</version>
         </dependency>
         <!--加入grpc的依赖，第一个是grpc依赖netty来传输的依赖库；第二个是因为grpc本来就是依赖于protobuf这个IDL的；
                     第三个依赖是用来生成客户端和服务器端的桩代码的。
